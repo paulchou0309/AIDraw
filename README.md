@@ -1,5 +1,5 @@
 ## 简介
-使用 quick draw 的[数据集](!https://console.cloud.google.com/storage/browser/quickdraw_dataset/sketchrnn),实现手绘图画识别的功能.
+使用 quick draw 的[数据集](https://console.cloud.google.com/storage/browser/quickdraw_dataset/sketchrnn),实现手绘图画识别的功能.
 
 ## 模型
 Google 使用了 sketch-rnn,不过其论文没有去细看,试着把数据转成 png 图片,使用 cnn 识别,在只有 6 种类别 (bee, bird, butterfly, flower, grass, rabbit) 的情况下效果还不错.
