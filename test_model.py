@@ -2,18 +2,11 @@ from __future__ import print_function, division
 
 import torch
 import torch.nn as nn
-import torch.optim as optim
-from torch.optim import lr_scheduler
 from torch.autograd import Variable
-import numpy as np
-import torchvision
 from torchvision import datasets, models, transforms
-import matplotlib.pyplot as plt
 import time
 import os
 # import copy
-
-plt.ion()
 
 
 data_transform = transforms.Compose([
@@ -24,8 +17,10 @@ data_transform = transforms.Compose([
 ])
 
 data_dir = 'png_data'
-test_dataset = datasets.ImageFolder(os.path.join(data_dir, 'test'), data_transform)
-dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=4, shuffle=True, num_workers=4)
+test_dataset = datasets.ImageFolder(
+    os.path.join(data_dir, 'test'), data_transform)
+dataloader = torch.utils.data.DataLoader(
+    test_dataset, batch_size=16, shuffle=True, num_workers=4)
 dataset_size = len(test_dataset)
 
 use_gpu = torch.cuda.is_available()
@@ -54,7 +49,7 @@ def test_model():
     for data in dataloader:
         inputs, labels = data
         if use_gpu:
-            inputs, labels = Variable( inputs.cuda()), Variable(labels.cuda())
+            inputs, labels = Variable(inputs.cuda()), Variable(labels.cuda())
         else:
             inputs, labels = Variable(inputs), Variable(labels)
 
