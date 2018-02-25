@@ -11,7 +11,7 @@ from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
 import time
 import os
-import copy
+# import copy
 
 plt.ion()
 
@@ -46,7 +46,6 @@ dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'valid', 'test']}
 class_names = image_datasets['train'].classes
 
 use_gpu = torch.cuda.is_available()
-use_gpu = False
 
 
 def imshow(inp, title=None):
@@ -155,28 +154,25 @@ def visualize_model(model, num_images=10):
 
 
 def model_ft():
-    model_tf = models.resnet18(pretrained=True)
-    num_ftrs = model_tf.fc.in_features
-    model_tf.fc = nn.Linear(num_ftrs, 2)
+    model = models.resnet18(pretrained=True)
+    num_ftrs = model.fc.in_features
+    model.fc = nn.Linear(num_ftrs, 6)
 
     if use_gpu:
-        model_ft = model_tf.cuda()
+        model = model.cuda()
 
     criterion = nn.CrossEntropyLoss()
 
-    optimizer_ft = optim.SGD(model_tf.parameters(), lr=0.001, momentum=0.9)
-
+    optimizer = optim.SGD(model.fc.parameters(), lr=0.001, momentum=0.9)
     exp_lr_scheduler = lr_scheduler.StepLR(
-        optimizer_ft, step_size=7, gamma=0.1)
-
-    model_ft = train_model(
-        model_ft, criterion, optimizer_ft, exp_lr_scheduler, num_epochs=25)
-
-    return model_ft
+        optimizer, step_size=7, gamma=0.1)
+    model = train_model(
+        model, criterion, optimizer, exp_lr_scheduler, num_epochs=3)
+    return model
 
 
 def fixed_feature_model():
-    model = torchvision.models.resnet18(pretrained=True)
+    model = models.resnet18(pretrained=True)
     for param in model.parameters():
         param.requires_grad = False
 
@@ -188,8 +184,7 @@ def fixed_feature_model():
 
     criterion = nn.CrossEntropyLoss()
 
-    optimizer = optim.SGD(
-        model.fc.parameters(), lr=0.001, momentum=0.9)
+    optimizer = optim.SGD(model.fc.parameters(), lr=0.001, momentum=0.9)
     exp_lr_scheduler = lr_scheduler.StepLR(
         optimizer, step_size=7, gamma=0.1)
     model = train_model(
@@ -197,7 +192,8 @@ def fixed_feature_model():
     return model
 
 
-model = fixed_feature_model()
+# model = fixed_feature_model()
+model = model_ft()
 
 visualize_model(model)
 plt.ioff()
