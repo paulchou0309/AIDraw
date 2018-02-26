@@ -18,7 +18,7 @@ python transfer_learning.py
 ```py
 python test_model.py
 ```
-5. predict.py: 使用训练好的模型对收回图案进行预测,例如当前目录下有图片 bee.png, 则执行命令: python predict.py bee.png, 若预测正确会输出: bee
+5. predict.py: 使用训练好的模型对手绘图案进行预测,如当前目录下有图片 bee.png, 则执行命令: python predict.py bee.png, 若预测正确会输出: bee
 
 
 **我的运行目录结构:**
