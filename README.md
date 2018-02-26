@@ -51,4 +51,4 @@ python test_model.py
 ├── transfer_learning.py
 └── transfer.pkl
 ```
-**运行 环境**: Python3.6.4 的虚拟环境,依赖见 requirements.txt
+**运行环境**: Python3.6.4 的虚拟环境,依赖见 requirements.txt
