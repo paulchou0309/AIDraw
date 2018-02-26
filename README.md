@@ -45,8 +45,10 @@ python test_model.py
 ├── predict.py
 ├── prepare.sh
 ├── README.md
+├── requirements.txt
 ├── test_model.py
 ├── trans_data.py
 ├── transfer_learning.py
 └── transfer.pkl
 ```
+**运行 环境**: Python3.6.4 的虚拟环境,依赖见 requirements.txt
