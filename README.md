@@ -18,7 +18,7 @@ python transfer_learning.py
 ```py
 python test_model.py
 ```
-5. predict.py: 使用训练好的模型对手绘图案进行预测,将需要预测的图片放置在 <path>/predict/img/ 目录下, 则执行命令: python predict.py <path>, 会输出预测概率最高的 4 个类别, 如: ['leaf', 'grass', 'bird', 'butterfly']. 若不带命令行参数 <path>, 则默认预测 ./predict/img/ 目录下的单个图片
+5. predict.py: 使用训练好的模型对手绘图案进行预测,将需要预测的图片放置在 $(path)/predict/img/ 目录下, 则执行命令: python predict.py {path}, 会输出预测概率最高的 4 个类别, 如: ['leaf', 'grass', 'bird', 'butterfly']. 若不带命令行参数 path, 则默认预测 ./predict/img/ 目录下的单个图片
 
 
 **我的运行目录结构:**
