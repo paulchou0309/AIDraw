@@ -20,7 +20,7 @@ data_dir = 'png_data'
 test_dataset = datasets.ImageFolder(
     os.path.join(data_dir, 'test'), data_transform)
 dataloader = torch.utils.data.DataLoader(
-    test_dataset, batch_size=16, shuffle=True, num_workers=4)
+    test_dataset, batch_size=32, shuffle=True)
 dataset_size = len(test_dataset)
 
 use_gpu = torch.cuda.is_available()
@@ -29,15 +29,15 @@ use_gpu = torch.cuda.is_available()
 def test_model():
     model = models.resnet18()
     num_ftrs = model.fc.in_features
-    model.fc = nn.Linear(num_ftrs, 6)
+    model.fc = nn.Linear(num_ftrs, 8)
 
     model = model.cuda() if use_gpu else model
     criterion = nn.CrossEntropyLoss()
 
     since = time.time()
 
-    if os.path.exists('transfer.pkl'):
-        model.load_state_dict(torch.load('transfer.pkl'))
+    if os.path.exists('forest.pkl'):
+        model.load_state_dict(torch.load('forest.pkl'))
 
     print('Model testing starts!')
 

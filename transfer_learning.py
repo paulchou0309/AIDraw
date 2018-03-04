@@ -41,7 +41,7 @@ data_dir = 'png_data'
 image_datasets = {x: datasets.ImageFolder(
     os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'valid', 'test']}
 dataloaders = {x: torch.utils.data.DataLoader(
-    image_datasets[x], batch_size=32, shuffle=True, num_workers=4) for x in ['train', 'valid', 'test']}
+    image_datasets[x], batch_size=32, shuffle=True) for x in ['train', 'valid', 'test']}
 dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'valid', 'test']}
 class_names = image_datasets['train'].classes
 
@@ -65,9 +65,10 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     since = time.time()
 
     # best_model_wts = copy.deepcopy(model.state_dict())
-    if os.path.exists('transfer.pkl'):
-        model.load_state_dict(torch.load('transfer.pkl'))
+    if os.path.exists('forest.pkl'):
+        model.load_state_dict(torch.load('forest.pkl'))
     best_acc = 0
+    # best_acc = 0.8925
 
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
@@ -112,7 +113,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
             if phase == 'valid' and epoch_acc > best_acc:
                 best_acc = epoch_acc
-                torch.save(model.state_dict(), 'transfer.pkl')
+                torch.save(model.state_dict(), 'forest.pkl')
                 # best_model_wts = copy.deepcopy(model.state_dict())
 
         print()
@@ -123,8 +124,8 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     print('Best val Acc: {:.4f}'.format(best_acc))
 
     # model.load_state_dict(best_model_wts)
-    if os.path.exists('transfer.pkl'):
-        model.load_state_dict(torch.load('transfer.pkl'))
+    if os.path.exists('forest.pkl'):
+        model.load_state_dict(torch.load('forest.pkl'))
     return model
 
 
@@ -156,7 +157,7 @@ def visualize_model(model, num_images=10):
 def model_ft():
     model = models.resnet18(pretrained=True)
     num_ftrs = model.fc.in_features
-    model.fc = nn.Linear(num_ftrs, 6)
+    model.fc = nn.Linear(num_ftrs, 8)
 
     if use_gpu:
         model = model.cuda()
@@ -167,7 +168,7 @@ def model_ft():
     exp_lr_scheduler = lr_scheduler.StepLR(
         optimizer, step_size=7, gamma=0.1)
     model = train_model(
-        model, criterion, optimizer, exp_lr_scheduler, num_epochs=3)
+        model, criterion, optimizer, exp_lr_scheduler, num_epochs=25)
     return model
 
 
@@ -177,7 +178,7 @@ def fixed_feature_model():
         param.requires_grad = False
 
     num_ftrs = model.fc.in_features
-    model.fc = nn.Linear(num_ftrs, 6)
+    model.fc = nn.Linear(num_ftrs, 8)
 
     if use_gpu:
         model = model.cuda()
