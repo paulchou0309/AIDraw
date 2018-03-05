@@ -22,7 +22,6 @@ data_transform = transforms.Compose([
 
 def load_data():
     data_dir = sys.argv[1] if len(sys.argv) == 2 else '.'
-    # data_dir = '.'
     pred_dataset = datasets.ImageFolder(
         os.path.join(data_dir, 'predict'), data_transform)
     dataloader = torch.utils.data.DataLoader(
