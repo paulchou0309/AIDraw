@@ -1,12 +1,13 @@
 from __future__ import print_function, division
 
+import json
+import time
+import os
+import sys
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
 from torchvision import datasets, models, transforms
-import time
-import os
-import sys
 
 
 class_names = ['bee', 'bird', 'butterfly', 'flower', 'grass', 'leaf', 'rabbit', 'tree']
@@ -43,12 +44,10 @@ def predict(dataloader):
         inputs = Variable(inputs)
 
         outputs = model(inputs)
-        _, preds = torch.topk(outputs.data, 4)
+        _, preds = torch.topk(outputs.data, 6)
         return [class_names[x] for x in preds[0]]
 
 
 if __name__ == '__main__':
-    since = time.time()
-    print(predict(load_data()))
-    time_elapsed = time.time() - since
-    print('Finished in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+    res = predict(load_data())
+    print(json.dumps(res))
