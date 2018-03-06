@@ -6,6 +6,7 @@ import os
 import sys
 import torch
 import torch.nn as nn
+from PIL import Image
 from torch.autograd import Variable
 from torchvision import datasets, models, transforms
 
@@ -20,15 +21,15 @@ data_transform = transforms.Compose([
 ])
 
 
-def load_data():
-    data_dir = sys.argv[1] if len(sys.argv) == 2 else '.'
-    pred_dataset = datasets.ImageFolder(
-        os.path.join(data_dir, 'predict'), data_transform)
-    dataloader = torch.utils.data.DataLoader(
-        pred_dataset, batch_size=1)
-    return dataloader
+def load_data(img_pos): 
+    image = Image.open(img_pos).convert('RGB')
+    image = data_transform(image).float()
+    image.unsqueeze_(0)
+    image = Variable(image)
+    return image
 
-def predict(dataloader):
+
+def predict(inputs):
     model = models.resnet18()
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, 8)
@@ -38,15 +39,20 @@ def predict(dataloader):
 
     model.train(False)
 
-    for data in dataloader:
-        inputs, _ = data
-        inputs = Variable(inputs)
+    outputs = model(inputs)
+    _, preds = torch.topk(outputs.data, 6)
+    return [class_names[x] for x in preds[0]]
 
-        outputs = model(inputs)
-        _, preds = torch.topk(outputs.data, 6)
-        return [class_names[x] for x in preds[0]]
+
+def main():
+    if len(sys.argv) > 1:
+        img_pos = sys.argv[1]
+    else:
+        print('You must specify the image position.')
+        return
+    res = predict(load_data(img_pos))
+    print(json.dumps(res))
 
 
 if __name__ == '__main__':
-    res = predict(load_data())
-    print(json.dumps(res))
+    main()
