@@ -18,7 +18,7 @@ python transfer_learning.py
 ```py
 python test_model.py
 ```
-5. predict.py: 使用训练好的模型对手绘图案进行预测,将需要预测的图片放置在 ${path}/predict/img/ 目录下, 则执行命令: python predict.py {path}, 会以 json 数组形式按预测概率降序输出概率最高的 6 个类别到控制台, 如: ["leaf", "grass", "bird", "butterfly", "rabbit", "tree"].
+5. predict.py: 使用训练好的模型对手绘图案进行预测. 运行命令为: python predict.py 后面接参数,参数 -b/--base64 ${base64_img} 表示传入图片 base64 编码, -p/--path ${path} 表示传入图片在硬盘中位置, -t/--theme ${theme} 表示传入主题以便选择相应模型, 默认为 forest 主题. 会以 json 数组形式按预测概率降序输出概率最高的 6 个类别到控制台, 如: ["leaf", "grass", "bird", "butterfly", "rabbit", "tree"].
 
 
 **我的运行目录结构:**

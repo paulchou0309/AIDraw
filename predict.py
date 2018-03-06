@@ -1,11 +1,14 @@
 from __future__ import print_function, division
 
+import base64
 import json
 import time
 import os
 import sys
+import getopt
 import torch
 import torch.nn as nn
+from io import BytesIO
 from PIL import Image
 from torch.autograd import Variable
 from torchvision import datasets, models, transforms
@@ -21,21 +24,22 @@ data_transform = transforms.Compose([
 ])
 
 
-def load_data(img_pos): 
-    image = Image.open(img_pos).convert('RGB')
+def load_data(img_input): 
+    image = Image.open(img_input).convert('RGB')
     image = data_transform(image).float()
     image.unsqueeze_(0)
     image = Variable(image)
     return image
 
 
-def predict(inputs):
+def predict(inputs, theme):
     model = models.resnet18()
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, 8)
 
-    if os.path.exists('forest.pkl'):
-        model.load_state_dict(torch.load('forest.pkl'))
+    model_pos = '%s.pkl' % theme
+    if os.path.exists(model_pos):
+        model.load_state_dict(torch.load(model_pos))
 
     model.train(False)
 
@@ -45,12 +49,23 @@ def predict(inputs):
 
 
 def main():
-    if len(sys.argv) > 1:
-        img_pos = sys.argv[1]
-    else:
-        print('You must specify the image position.')
-        return
-    res = predict(load_data(img_pos))
+    theme = 'forest'
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "b:p:t:", ["base64=", "path=", "theme="])
+    except getopt.GetoptError:
+        print("Argv needed to specify the input")
+    for opt, args in opts:
+        if opt in ('-p', '--path'):
+            input = load_data(args)
+        elif opt in ('-b', '--base64'):
+            input = load_data(BytesIO(base64.b64decode(args)))
+        elif opt in ('-t', '--theme'):
+            theme = args
+        else:
+            print(opt)
+            print('Invalid argv!')   
+            return
+    res = predict(input, theme)
     print(json.dumps(res))
 
 
