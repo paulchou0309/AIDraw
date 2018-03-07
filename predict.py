@@ -32,14 +32,13 @@ def load_data(img_input):
     return image
 
 
-def load_model(theme):
+def load_model(model_pos):
     model = models.resnet18()
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, 8)
 
-    model_pos = '%s.pkl' % theme
     if os.path.exists(model_pos):
-        model.load_state_dict(torch.load(model_pos))
+        model.load_state_dict(torch.load(model_pos, map_location=lambda storage, location: storage))
 
     model.train(False)
     
@@ -53,9 +52,9 @@ def predict(model, inputs):
 
 
 def main():
-    theme = 'forest'
+    model_pos = 'forest.pkl'
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "b:p:t:", ["base64=", "path=", "theme="])
+        opts, args = getopt.getopt(sys.argv[1:], "b:p:m:", ["base64=", "path=", "model="])
     except getopt.GetoptError:
         print("Argv needed to specify the input")
     for opt, args in opts:
@@ -63,13 +62,13 @@ def main():
             inputs = load_data(args)
         elif opt in ('-b', '--base64'):
             inputs = load_data(BytesIO(base64.b64decode(args)))
-        elif opt in ('-t', '--theme'):
-            theme = args
+        elif opt in ('-m', '--model'):
+            model_pos = args
         else:
             print(opt)
             print('Invalid argv!')   
             return
-    model = load_model(theme)
+    model = load_model(model_pos)
     res = predict(model, inputs)
     print(json.dumps(res))
     
