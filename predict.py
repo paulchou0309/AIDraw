@@ -39,7 +39,7 @@ def predict(inputs, theme):
 
     model_pos = '%s.pkl' % theme
     if os.path.exists(model_pos):
-        model.load_state_dict(torch.load(model_pos))
+        model.load_state_dict(torch.load(model_pos, map_location=lambda storage, location: storage))
 
     model.train(False)
 
