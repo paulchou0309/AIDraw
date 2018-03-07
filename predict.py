@@ -39,6 +39,8 @@ def load_model(model_pos):
 
     if os.path.exists(model_pos):
         model.load_state_dict(torch.load(model_pos, map_location=lambda storage, location: storage))
+    else:
+        print('Model does not exist.')
 
     model.train(False)
     
