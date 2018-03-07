@@ -13,7 +13,6 @@ vcode = getpass.getpass()
 
 !mkdir -p drive
 !google-drive-ocamlfuse drive
-!tar zxf drive/DL/png_data.tar.gz
 !pip3 install http://download.pytorch.org/whl/cu80/torch-0.3.0.post4-cp36-cp36m-linux_x86_64.whl
 !pip3 install torchvision
 
@@ -21,4 +20,4 @@ vcode = getpass.getpass()
 !pip install PIL
 !pip install image
 
-!tar zxf drive/DL/png_data.tar.gz
+!tar zxf drive/DL/png_data_forest.tar.gz

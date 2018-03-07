@@ -56,6 +56,6 @@ python test_model.py
 数据转换 (npz -> png) 需要的文件及文件夹有: npz_data, trans_data.py
 执行训练需要的文件及文件夹有: png_data, transfer_learning.py, forest.pkl(可选).
 测试模型准确率需要的文件及文件夹有: png_data, test_model.py, forest.pkl
-执行预测需要的文件及文件夹有: predict.py, forest.pkl, predict.
+执行预测需要的文件及文件夹有: predict.py, forest.pkl.
 ```
 **运行环境**: Python3.6.4 的虚拟环境,依赖见 requirements.txt
