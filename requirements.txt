@@ -1,7 +1,11 @@
 cycler==0.10.0
 Django==2.0.2
+gevent==1.2.2
+greenlet==0.4.13
+imutils==0.4.5
 matplotlib==2.1.2
 numpy==1.14.0
+opencv-python==3.4.0.12
 Pillow==5.0.0
 pyparsing==2.2.0
 python-dateutil==2.6.1

@@ -9,6 +9,7 @@ import getopt
 import torch
 import torch.nn as nn
 from io import BytesIO
+from gevent.server import StreamServer
 from PIL import Image
 from torch.autograd import Variable
 from torchvision import datasets, models, transforms
@@ -53,7 +54,7 @@ def predict(model, inputs):
     return [class_names[x] for x in preds[0]]
 
 
-def main():
+def run_as_script():
     model_pos = 'forest.pkl'
     try:
         opts, args = getopt.getopt(sys.argv[1:], "b:p:m:", ["base64=", "path=", "model="])
@@ -73,7 +74,25 @@ def main():
     model = load_model(model_pos)
     res = predict(model, inputs)
     print(json.dumps(res))
+
+
+def run_as_tcp_server(socket, addr):
+    rfileobj = socket.makefile(mode='rb')
+    b64_img = rfileobj.readline()
+    rfileobj.close()
+    b64_img = b64_img.strip(b'\r\n')
+    inputs = load_data(BytesIO(base64.b64decode(b64_img)))
+    global model
+    res = predict(model, inputs)
+    socket.sendall(bytes(json.dumps(res), 'utf-8'))
+
     
+def main():
+    model_pos = 'forest.pkl'
+    global model
+    model = load_model(model_pos)
+    server = StreamServer(('127.0.0.1', 16000), run_as_tcp_server)
+    server.serve_forever()
 
 if __name__ == '__main__':
     main()
