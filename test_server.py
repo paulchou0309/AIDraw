@@ -17,6 +17,6 @@ def do_connect(addr):
 addr = ('127.0.0.1', 16000)
 
 since = time.time()
-greenlets = [gevent.spawn(do_connect, addr) for i in range(1)]
-gevent.joinall(greenlets, timeout=5)
+greenlets = [gevent.spawn(do_connect, addr) for i in range(10)]
+gevent.joinall(greenlets, timeout=100)
 print(time.time() - since)

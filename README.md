@@ -9,7 +9,7 @@ Google 使用了 sketch-rnn,不过其论文没有去细看,试着把数据转成
 ```py
 python trans_data.py
 ```
-2. transfer_learning.py: 迁移学习,直接使用预训练好的 Resnet18 模型.运行命令为:
+2. transfer_learning.py: 迁移学习,使用预训练好的 Resnet18 模型进行二次训练.运行命令为:
 ```py
 python transfer_learning.py
 ```
@@ -19,7 +19,7 @@ python transfer_learning.py
 python test_model.py
 ```
 5. predict.py: 使用训练好的模型对手绘图案进行预测.以 tcp socket server 形式提供服务,运行命令为: python predict.py,会以 json 数组形式按预测概率降序返回概率最高的 6 个类别, 如: ["leaf", "grass", "bird", "butterfly", "rabbit", "tree"].注意图片传输为 base64 编码,以 '\n' 作为结束标识符,如果遇到问题可以参考 test_server.py.
-6. test_server.py: 用以预测服务 tcp server,运行命令为: python test_server.py,开启 10 个协程对 tcp server 发出请求,总的响应时间大约在 1.2s.
+6. test_server.py: 用于测试 tcp server 预测服务,运行命令为: python test_server.py,开启 10 个协程对 tcp server 发出请求,总的响应时间大约在 1.2s.
 
 可以看到虽然是使用协程提供 tcp server 服务,但是因为预测是 CPU-intensive,因此响应速度并无明显提升,如果要提高并发能力,可以开启多个进程.
 
